@@ -13,7 +13,7 @@ int main(void) {
             while (input != '\n' && input != EOF) {
                 input = getchar();
             }
-        } while (choice < 0 || choice > 8);
+        } while (choice < 0 || choice > 8 || squares[choice] != 0);
         squares[choice] = player;
         if (checkSquares(player)) {
             printBoard();
