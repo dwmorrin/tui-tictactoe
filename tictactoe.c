@@ -1,19 +1,20 @@
 #include "tictactoe.h"
 
 int main(void) {
-    int choice, player = 1, comp = 2;
+    int input, choice, player = 1, comp = 2;
     for (;;) {
         printBoard();
         do {
             printf("\nChoose [0-9]: ");
-            choice = getchar();
-            choice -= '0';
+            input = getchar();
+            input -= '0';
+            choice = input;
+            /* discard remaining input */
+            while (input != '\n' && input != EOF) {
+                input = getchar();
+            }
         } while (choice < 0 || choice > 8);
         squares[choice] = player;
-        /* discard remaining input */
-        while (choice != '\n' && choice != EOF) {
-            choice = getchar();
-        }
         if (checkSquares(player)) {
             printBoard();
             puts("Player has won");
