@@ -3,6 +3,9 @@
 
 #define BOARD_SIZE 9
 #define WINS_SIZE 8
+#define OPEN_TOKEN 0
+#define PLAYER_TOKEN 1
+#define COMP_TOKEN 2
 
 /*
  * board is held in a 9 element array
@@ -18,7 +21,7 @@
  * Diag: 048, 246
  * => win must include 0, 1, 2, 3, or 6
  */
-int squares[BOARD_SIZE] = {0};
+int squares[BOARD_SIZE] = {OPEN_TOKEN};
 int wins[WINS_SIZE][3] = {
     {0,1,2}, {3,4,5}, {6,7,8},
     {0,3,6}, {1,4,7}, {2,5,8},
@@ -28,9 +31,11 @@ int wins[WINS_SIZE][3] = {
 /* checkSquares scans squares for winning combinations for player */
 int checkSquares(int player);
 
-void compMove(int comp);
+void compMove(void);
 
 int hasSet(int player, int set[]);
+
+void playerMove(void);
 
 /* printBoard displays the current status in a terminal
  * TODO implement in ncurses

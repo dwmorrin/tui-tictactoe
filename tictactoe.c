@@ -1,27 +1,16 @@
 #include "tictactoe.h"
 
 int main(void) {
-    int input, choice, player = 1, comp = 2;
     for (;;) {
         printBoard();
-        do {
-            printf("\nChoose [0-9]: ");
-            input = getchar();
-            input -= '0';
-            choice = input;
-            /* discard remaining input */
-            while (input != '\n' && input != EOF) {
-                input = getchar();
-            }
-        } while (choice < 0 || choice > 8 || squares[choice] != 0);
-        squares[choice] = player;
-        if (checkSquares(player)) {
+        playerMove();
+        if (checkSquares(PLAYER_TOKEN)) {
             printBoard();
             puts("Player has won");
             break;
         }
-        compMove(comp);
-        if (checkSquares(comp)) {
+        compMove();
+        if (checkSquares(COMP_TOKEN)) {
             printBoard();
             puts("Comp has won");
             break;
@@ -39,12 +28,12 @@ int checkSquares(int player) {
     return 0;
 }
 
-void compMove(int comp) {
+void compMove() {
     int i = 0;
     while (squares[i] != 0) {
         ++i;
     }
-    squares[i] = comp;
+    squares[i] = COMP_TOKEN;
 }
 
 int hasSet(int player, int set[]) {
@@ -54,6 +43,21 @@ int hasSet(int player, int set[]) {
         }
     }
     return 1;
+}
+
+void playerMove() {
+    int choice, input;
+    do {
+        printf("\nChoose [0-9]: ");
+        input = getchar();
+        input -= '0';
+        choice = input;
+        /* discard remaining input */
+        while (input != '\n' && input != EOF) {
+            input = getchar();
+        }
+    } while (choice < 0 || choice > 8 || squares[choice] != 0);
+    squares[choice] = PLAYER_TOKEN;
 }
 
 void printBoard(void) {
