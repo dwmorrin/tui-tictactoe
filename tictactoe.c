@@ -4,9 +4,16 @@ int main(void) {
     int choice, player = 1, comp = 2;
     for (;;) {
         printBoard();
-        printf("Choose [0-9]: ");
-        scanf("%d", &choice);
+        do {
+            printf("\nChoose [0-9]: ");
+            choice = getchar();
+            choice -= '0';
+        } while (choice < 0 || choice > 8);
         squares[choice] = player;
+        /* discard remaining input */
+        while (choice != '\n' && choice != EOF) {
+            choice = getchar();
+        }
         if (checkSquares(player)) {
             printBoard();
             puts("Player has won");
@@ -49,7 +56,7 @@ int hasSet(int player, int set[]) {
 }
 
 void printBoard(void) {
-    printf(
+    printf("\n"
         " %d | %d | %d \n"
         " --|---|-- \n"
         " %d | %d | %d \n"
