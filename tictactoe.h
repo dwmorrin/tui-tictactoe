@@ -1,3 +1,5 @@
+#ifndef TUI_TICTACTOE
+#define TUI_TICTACTOE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -47,3 +49,5 @@ void playerMove(void);
  * TODO implement in ncurses
  */
 void printBoard(void);
+
+#endif
