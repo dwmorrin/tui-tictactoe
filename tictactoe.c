@@ -1,19 +1,18 @@
 #include "tictactoe.h"
 
 int main(void) {
-    for (;;) {
+    for (int moves = 0;; ++moves) {
         printBoard();
         playerMove();
         if (checkSquares(squares, PLAYER_TOKEN)) {
-            printBoard();
-            puts("Player has won");
-            break;
+            end(WIN);
+        }
+        if (moves == 4) {
+            end(TIE);
         }
         compMove();
         if (checkSquares(squares, COMP_TOKEN)) {
-            printBoard();
-            puts("Comp has won");
-            break;
+            end(LOSE);
         }
     }
     return 0;
@@ -43,6 +42,22 @@ void compMove() {
         ++i;
     }
     squares[i] = COMP_TOKEN;
+}
+
+void end(int result) {
+    printBoard();
+    switch (result) {
+        case TIE:
+            puts("It's a tie!");
+            break;
+        case WIN:
+            puts("You won!");
+            break;
+        case LOSE:
+            puts("Computer won.");
+            break;
+    }
+    exit(EXIT_SUCCESS);
 }
 
 int findWinningSquare(int player) {

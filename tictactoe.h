@@ -10,6 +10,8 @@
 #define PLAYER_TOKEN 1
 #define COMP_TOKEN 2
 
+enum {WIN, TIE, LOSE};
+
 /*
  * board is held in a 9 element array
  * mapped as follows:
@@ -35,6 +37,8 @@ int wins[WINS_SIZE][3] = {
 int checkSquares(int board[], int player);
 
 void compMove(void);
+
+void end(int result);
 
 /* findWinningSquare searches board for squares the player could win with
  * If a winning square is found, the computer chooses it
