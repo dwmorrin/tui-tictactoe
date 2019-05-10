@@ -45,6 +45,8 @@ void end(int result);
  */
 int findWinningSquare(int player);
 
+int getInput(char *prompt);
+
 int hasSet(int board[], int player, int set[]);
 
 void playerMove(void);
@@ -53,5 +55,7 @@ void playerMove(void);
  * TODO implement in ncurses
  */
 void printBoard(void);
+
+void resetBoard(void);
 
 #endif

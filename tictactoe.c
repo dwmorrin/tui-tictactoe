@@ -6,13 +6,16 @@ int main(void) {
         playerMove();
         if (checkSquares(squares, PLAYER_TOKEN)) {
             end(WIN);
-        }
-        if (moves == 4) {
+            moves = -1;
+        } else if (moves == 4) {
             end(TIE);
-        }
-        compMove();
-        if (checkSquares(squares, COMP_TOKEN)) {
-            end(LOSE);
+            moves = -1;
+        } else {
+            compMove();
+            if (checkSquares(squares, COMP_TOKEN)) {
+                end(LOSE);
+                moves = -1;
+            }
         }
     }
     return 0;
@@ -57,6 +60,17 @@ void end(int result) {
             puts("Computer won.");
             break;
     }
+
+    int choice;
+    do {
+        choice = getInput("\nPlay again? [y/n] ");
+    } while (choice != 'Y' && choice != 'y' &&
+             choice != 'N' && choice != 'n');
+
+    if (choice == 'Y' || choice == 'y') {
+        resetBoard();
+        return;
+    }
     exit(EXIT_SUCCESS);
 }
 
@@ -76,6 +90,18 @@ int findWinningSquare(int player) {
     return -1;
 }
 
+int getInput(char *prompt) {
+    int c, input;
+    printf("%s", prompt);
+    c = getchar();
+    input = c;
+    /* discard remaining input */
+    while (c != '\n' && c != EOF) {
+        c = getchar();
+    }
+    return input;
+}
+
 int hasSet(int board[], int player, int set[]) {
     for (int i = 0; i < 3; ++i) {
         if (board[set[i]] != player) {
@@ -86,16 +112,10 @@ int hasSet(int board[], int player, int set[]) {
 }
 
 void playerMove() {
-    int choice, input;
+    int choice;
     do {
-        printf("\nChoose [0-9]: ");
-        input = getchar();
-        input -= '0';
-        choice = input;
-        /* discard remaining input */
-        while (input != '\n' && input != EOF) {
-            input = getchar();
-        }
+        choice = getInput("\nChoose [0-9]: ");
+        choice -= '0';
     } while (choice < 0 || choice > 8 || squares[choice] != 0);
     squares[choice] = PLAYER_TOKEN;
 }
@@ -110,4 +130,10 @@ void printBoard(void) {
         squares[0], squares[1], squares[2],
         squares[3], squares[4], squares[5],
         squares[6], squares[7], squares[8]);
+}
+
+void resetBoard(void) {
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        squares[i] = OPEN_TOKEN;
+    }
 }
