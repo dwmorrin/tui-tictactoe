@@ -4,13 +4,13 @@ int main(void) {
     for (;;) {
         printBoard();
         playerMove();
-        if (checkSquares(PLAYER_TOKEN)) {
+        if (checkSquares(squares, PLAYER_TOKEN)) {
             printBoard();
             puts("Player has won");
             break;
         }
         compMove();
-        if (checkSquares(COMP_TOKEN)) {
+        if (checkSquares(squares, COMP_TOKEN)) {
             printBoard();
             puts("Comp has won");
             break;
@@ -19,9 +19,9 @@ int main(void) {
     return 0;
 }
 
-int checkSquares(int player) {
+int checkSquares(int board[], int player) {
     for (int i = 0; i < WINS_SIZE; ++i) {
-        if (hasSet(player, wins[i])) {
+        if (hasSet(board, player, wins[i])) {
             return 1;
         }
     }
@@ -29,16 +29,41 @@ int checkSquares(int player) {
 }
 
 void compMove() {
+    int choice;
+    choice = findWinningSquare(COMP_TOKEN);
+    if (choice < 0) {
+        choice = findWinningSquare(PLAYER_TOKEN);
+    }
+    if (choice > -1) {
+        squares[choice] = COMP_TOKEN;
+        return;
+    }
     int i = 0;
-    while (squares[i] != 0) {
+    while (squares[i] != OPEN_TOKEN) {
         ++i;
     }
     squares[i] = COMP_TOKEN;
 }
 
-int hasSet(int player, int set[]) {
+int findWinningSquare(int player) {
+    int boardCopy[9];
+    memcpy(boardCopy, squares, 9 * sizeof(int));
+    for (int i = 0; i < 9; ++i) {
+        if (boardCopy[i] != OPEN_TOKEN) {
+            continue;
+        }
+        boardCopy[i] = player;
+        if (checkSquares(boardCopy, player)) {
+            return i;
+        }
+        boardCopy[i] = OPEN_TOKEN;
+    }
+    return -1;
+}
+
+int hasSet(int board[], int player, int set[]) {
     for (int i = 0; i < 3; ++i) {
-        if (squares[set[i]] != player) {
+        if (board[set[i]] != player) {
             return 0;
         }
     }

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define BOARD_SIZE 9
 #define WINS_SIZE 8
@@ -29,11 +30,16 @@ int wins[WINS_SIZE][3] = {
 };
 
 /* checkSquares scans squares for winning combinations for player */
-int checkSquares(int player);
+int checkSquares(int board[], int player);
 
 void compMove(void);
 
-int hasSet(int player, int set[]);
+/* findWinningSquare searches board for squares the player could win with
+ * If a winning square is found, the computer chooses it
+ */
+int findWinningSquare(int player);
+
+int hasSet(int board[], int player, int set[]);
 
 void playerMove(void);
 
