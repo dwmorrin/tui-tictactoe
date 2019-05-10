@@ -1,6 +1,7 @@
 #include "tictactoe.h"
 
 int main(void) {
+    resetBoard();
     for (int moves = 0;; ++moves) {
         printBoard();
         playerMove();
@@ -21,7 +22,7 @@ int main(void) {
     return 0;
 }
 
-int checkSquares(int board[], int player) {
+int checkSquares(char board[], char player) {
     for (int i = 0; i < WINS_SIZE; ++i) {
         if (hasSet(board, player, wins[i])) {
             return 1;
@@ -74,10 +75,10 @@ void end(int result) {
     exit(EXIT_SUCCESS);
 }
 
-int findWinningSquare(int player) {
-    int boardCopy[9];
-    memcpy(boardCopy, squares, 9 * sizeof(int));
-    for (int i = 0; i < 9; ++i) {
+int findWinningSquare(char player) {
+    char boardCopy[BOARD_SIZE];
+    memcpy(boardCopy, squares, BOARD_SIZE * sizeof(char));
+    for (int i = 0; i < BOARD_SIZE; ++i) {
         if (boardCopy[i] != OPEN_TOKEN) {
             continue;
         }
@@ -102,7 +103,7 @@ int getInput(char *prompt) {
     return input;
 }
 
-int hasSet(int board[], int player, int set[]) {
+int hasSet(char board[], char player, int set[]) {
     for (int i = 0; i < 3; ++i) {
         if (board[set[i]] != player) {
             return 0;
@@ -114,19 +115,19 @@ int hasSet(int board[], int player, int set[]) {
 void playerMove() {
     int choice;
     do {
-        choice = getInput("\nChoose [0-9]: ");
-        choice -= '0';
-    } while (choice < 0 || choice > 8 || squares[choice] != 0);
+        choice = getInput("\nChoose [1-9]: ");
+        choice -= '0' + 1;
+    } while (choice < 0 || choice > 8 || squares[choice] != OPEN_TOKEN);
     squares[choice] = PLAYER_TOKEN;
 }
 
 void printBoard(void) {
     printf("\n"
-        " %d | %d | %d \n"
-        " --|---|-- \n"
-        " %d | %d | %d \n"
-        " --|---|-- \n"
-        " %d | %d | %d \n",
+        "123: %c | %c | %c \n"
+        "     --|---|-- \n"
+        "456: %c | %c | %c \n"
+        "     --|---|-- \n"
+        "789: %c | %c | %c \n",
         squares[0], squares[1], squares[2],
         squares[3], squares[4], squares[5],
         squares[6], squares[7], squares[8]);
