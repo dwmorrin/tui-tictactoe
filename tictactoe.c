@@ -122,15 +122,15 @@ void playerMove() {
 }
 
 void printBoard(void) {
-    printf("\n"
-        "123: %c | %c | %c \n"
-        "     --|---|-- \n"
-        "456: %c | %c | %c \n"
-        "     --|---|-- \n"
-        "789: %c | %c | %c \n",
-        squares[0], squares[1], squares[2],
-        squares[3], squares[4], squares[5],
-        squares[6], squares[7], squares[8]);
+    printf("\n");
+    for (int i = 0, j = 0; i < 3; ++i) {
+        j = i * 3;
+        printf(BOARD_ROW, j + 1, j + 2, j + 3,
+                squares[j], squares[j + 1], squares[j + 2]);
+        if (i < 2) {
+            printf(BOARD_BORDER);
+        }
+    }
 }
 
 void resetBoard(void) {

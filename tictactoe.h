@@ -9,6 +9,8 @@
 #define OPEN_TOKEN ' '
 #define PLAYER_TOKEN 'X' 
 #define COMP_TOKEN 'O'
+#define BOARD_BORDER "     --|---|--\n"
+#define BOARD_ROW "%d%d%d: %c | %c | %c\n"
 
 enum {WIN, TIE, LOSE};
 
