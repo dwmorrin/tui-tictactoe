@@ -4,19 +4,19 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define BOARD_SIZE 9
+#define BOARD_ROWS 4
+#define BOARD_COLS 4
+#define BOARD_SIZE (BOARD_ROWS * BOARD_COLS)
 #define WINS_SIZE 8
 #define OPEN_TOKEN ' '
 #define PLAYER_TOKEN 'X' 
 #define COMP_TOKEN 'O'
-#define BOARD_BORDER "     --|---|--\n"
-#define BOARD_ROW "%d%d%d: %c | %c | %c\n"
 
 enum {WIN, TIE, LOSE};
 
 /*
- * board is held in a 9 element array
- * mapped as follows:
+ * board is held in a BOARD_SIZE element array
+ * mapped as follows for 3x3 board:
  *   0 | 1 | 2
  *   --|---|--
  *   3 | 4 | 5
@@ -28,7 +28,7 @@ enum {WIN, TIE, LOSE};
  * Diag: 048, 246
  */
 char squares[BOARD_SIZE];
-int wins[WINS_SIZE][3] = {
+int wins[WINS_SIZE][BOARD_ROWS] = {
     {0,1,2}, {3,4,5}, {6,7,8},
     {0,3,6}, {1,4,7}, {2,5,8},
     {0,4,8}, {2,4,6}
