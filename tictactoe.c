@@ -103,22 +103,21 @@ int getInput(char *prompt) {
     return input;
 }
 
-int hasSet(char board[], char player, int set[]) {
-    for (int i = 0; i < 3; ++i) {
-        if (board[set[i]] != player) {
-            return 0;
-        }
-    }
-    return 1;
-}
-
 void playerMove() {
-    int choice;
+    int choice, row;
     do {
         choice = getInput("\nChoose [1-9]: ");
         choice -= '0' + 1;
-    } while (choice < 0 || choice > 8 || squares[choice] != OPEN_TOKEN);
-    squares[choice] = PLAYER_TOKEN;
+        if (choice < 0 || choice > 8) {
+            continue;
+        }
+        row = 0;
+        while (row > 2) {
+            choice -= 3;
+            ++row;
+        }
+    } while (squares[row][choice] != OPEN_TOKEN);
+    squares[row][choice] = PLAYER_TOKEN;
 }
 
 void printBoard(void) {
@@ -126,7 +125,7 @@ void printBoard(void) {
     for (int i = 0, j = 0; i < 3; ++i) {
         j = i * 3;
         printf(BOARD_ROW, j + 1, j + 2, j + 3,
-                squares[j], squares[j + 1], squares[j + 2]);
+                squares[i][0], squares[i][1], squares[i][2]);
         if (i < 2) {
             printf(BOARD_BORDER);
         }

@@ -15,7 +15,7 @@
 enum {WIN, TIE, LOSE};
 
 /*
- * board is held in a 9 element array
+ * board is held in a 2d 3x3 array
  * mapped as follows:
  *   0 | 1 | 2
  *   --|---|--
@@ -27,15 +27,14 @@ enum {WIN, TIE, LOSE};
  * Cols: 036, 147, 258
  * Diag: 048, 246
  */
-char squares[BOARD_SIZE];
-int wins[WINS_SIZE][3] = {
-    {0,1,2}, {3,4,5}, {6,7,8},
-    {0,3,6}, {1,4,7}, {2,5,8},
-    {0,4,8}, {2,4,6}
+char squares[3][3] = {
+    {'-', '-', '-'},
+    {'-', '-', '-'},
+    {'-', '-', '-'}
 };
 
 /* checkSquares scans squares for winning combinations for player */
-int checkSquares(char board[], char player);
+int checkSquares(char board[3][3], char player);
 
 void compMove(void);
 
@@ -48,7 +47,7 @@ int findWinningSquare(char player);
 
 int getInput(char *prompt);
 
-int hasSet(char board[], char player, int set[]);
+int hasSet(char board[3][3], char player, int set[]);
 
 void playerMove(void);
 
