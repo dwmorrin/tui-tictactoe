@@ -15,10 +15,13 @@ int main() {
         .p1 = &p1,
         .p2 = &p2
     }; 
-    for (;;) {
-        GamePrint(&game);
+    for (int moves = 0; moves < 9; ++moves) {
+        if (! game.currentPlayer->isComp) {
+            GamePrint(&game);
+        }
         GameGetMove(&game);
         GameCheckWin(&game);
         game.currentPlayer = game.currentPlayer == game.p1 ? game.p2 : game.p1;
     }
+    GameEnd(&game, TIE);
 }

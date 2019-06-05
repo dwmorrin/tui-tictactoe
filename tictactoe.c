@@ -84,6 +84,9 @@ void GameEnd(struct Game *game, int result) {
         case LOSE:
             puts("you lose!");
             break;
+        case TIE:
+            puts("it's a tie!");
+            break;
     }
     exit(EXIT_SUCCESS);
 }
