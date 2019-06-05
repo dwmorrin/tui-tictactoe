@@ -1,96 +1,5 @@
 #include "tictactoe.h"
 
-int main(void) {
-    resetBoard();
-    for (int moves = 0;; ++moves) {
-        printBoard();
-        playerMove();
-        if (checkSquares(squares, PLAYER_TOKEN)) {
-            end(WIN);
-            moves = -1;
-        } else if (moves == 4) {
-            end(TIE);
-            moves = -1;
-        } else {
-            compMove();
-            if (checkSquares(squares, COMP_TOKEN)) {
-                end(LOSE);
-                moves = -1;
-            }
-        }
-    }
-    return 0;
-}
-
-int checkSquares(char board[], char player) {
-    for (int i = 0; i < WINS_SIZE; ++i) {
-        if (hasSet(board, player, wins[i])) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
-void compMove() {
-    int choice;
-    choice = findWinningSquare(COMP_TOKEN);
-    if (choice < 0) {
-        choice = findWinningSquare(PLAYER_TOKEN);
-    }
-    if (choice > -1) {
-        squares[choice] = COMP_TOKEN;
-        return;
-    }
-    int i = 0;
-    while (squares[i] != OPEN_TOKEN) {
-        ++i;
-    }
-    squares[i] = COMP_TOKEN;
-}
-
-void end(int result) {
-    printBoard();
-    switch (result) {
-        case TIE:
-            puts("It's a tie!");
-            break;
-        case WIN:
-            puts("You won!");
-            break;
-        case LOSE:
-            puts("Computer won.");
-            break;
-    }
-
-    int choice;
-    do {
-        choice = getInput("\nPlay again? [y/n] ");
-    } while (choice != 'Y' && choice != 'y' &&
-             choice != 'N' && choice != 'n');
-
-    if (choice == 'Y' || choice == 'y') {
-        resetBoard();
-        return;
-    }
-    exit(EXIT_SUCCESS);
-}
-
-int findWinningSquare(char player) {
-    char boardCopy[BOARD_SIZE];
-    memcpy(boardCopy, squares, BOARD_SIZE * sizeof(char));
-    for (int i = 0; i < BOARD_SIZE; ++i) {
-        if (boardCopy[i] != OPEN_TOKEN) {
-            continue;
-        }
-        boardCopy[i] = player;
-        if (checkSquares(boardCopy, player)) {
-            return i;
-        }
-        boardCopy[i] = OPEN_TOKEN;
-    }
-    return -1;
-}
-
 int getInput(char *prompt) {
     int c, input;
     printf("%s", prompt);
@@ -103,37 +12,130 @@ int getInput(char *prompt) {
     return input;
 }
 
-void playerMove() {
-    int choice, row;
-    do {
-        choice = getInput("\nChoose [1-9]: ");
-        choice -= '0' + 1;
-        if (choice < 0 || choice > 8) {
-            continue;
-        }
-        row = 0;
-        while (row > 2) {
-            choice -= 3;
-            ++row;
-        }
-    } while (squares[row][choice] != OPEN_TOKEN);
-    squares[row][choice] = PLAYER_TOKEN;
+bool GameCheckSquares(struct Game *game, struct Player *player) {
+    int row = player->move->row,
+        col = player->move->col;
+    if (game->board[row][0] == player->token &&
+        game->board[row][1] == player->token &&
+        game->board[row][2] == player->token) {
+        return true;
+    }
+    if (game->board[0][col] == player->token &&
+        game->board[1][col] == player->token &&
+        game->board[2][col] == player->token) {
+        return true;
+    }
+    if (row == col &&
+        game->board[0][0] == player->token &&
+        game->board[1][1] == player->token &&
+        game->board[2][2] == player->token) {
+        return true;
+    }
+    if (row + col == 2 &&
+        game->board[0][2] == player->token &&
+        game->board[1][1] == player->token &&
+        game->board[2][0] == player->token) {
+        return true;
+    }
+    return false;
 }
 
-void printBoard(void) {
-    printf("\n");
-    for (int i = 0, j = 0; i < 3; ++i) {
-        j = i * 3;
-        printf(BOARD_ROW, j + 1, j + 2, j + 3,
-                squares[i][0], squares[i][1], squares[i][2]);
-        if (i < 2) {
+void GameCompMove(struct Game *game, struct Player *comp) {
+    struct Move move = {-1, -1};
+    GameFindWinningMove(game, comp, &move);
+    if (move.row < 0) {
+        GameFindWinningMove(game, game->p1, &move);
+    }
+    if (move.row > -1) {
+        game->board[move.row][move.col] = COMP_TOKEN;
+        PlayerSetMove(comp, &move);
+        return;
+    }
+    for (int row = 0; row < 3; ++row) {
+        for (int col = 0; col < 3; ++col) {
+            if (game->board[row][col] == OPEN_TOKEN) {
+                game->board[row][col] = COMP_TOKEN;
+                PlayerSetMove(comp, &move);
+                return;
+            }
+        }
+    }
+}
+
+void GameEnd(struct Game *game, int result) {
+    GamePrint(game);
+    switch (result) {
+        case WIN:
+            puts("you won!");
+            break;
+        case LOSE:
+            puts("you lose!");
+            break;
+    }
+    exit(EXIT_SUCCESS);
+}
+
+/**
+ * mutates the move, nothing else
+ * usage: pass in a temp move and check the result
+ * use -1 values to represent null
+ */
+void GameFindWinningMove(struct Game *game, struct Player *player, struct Move *move) {
+    for (int row = 0; row < 3; ++row) {
+        for (int col = 0; col < 3; ++col) {
+            if (game->board[row][col] != OPEN_TOKEN) {
+                continue;
+            }
+            game->board[row][col] = player->token;
+            if (GameCheckSquares(game, player)) {
+                move->row = row;
+                move->col = col;
+                game->board[row][col] = OPEN_TOKEN;
+                return;
+            }
+            game->board[row][col] = OPEN_TOKEN;
+        }
+    }
+}
+
+void GamePrint(struct Game *game) {
+    for (int row = 0; row < 3; ++row) {
+        printf(BOARD_ROW,
+                3*row+1, 3*row+2, 3*row+3,
+                game->board[row][0],
+                game->board[row][1],
+                game->board[row][2]);
+        if (row < 2) {
             printf(BOARD_BORDER);
         }
     }
 }
 
-void resetBoard(void) {
-    for (int i = 0; i < BOARD_SIZE; ++i) {
-        squares[i] = OPEN_TOKEN;
+void GameReset(struct Game *game) {
+    for (int row = 0; row < 3; ++row) {
+        for (int col = 0; col < 3; ++col) {
+            game->board[row][col] = OPEN_TOKEN;
+        }
     }
+}
+
+bool PlayerMove(struct Player *player, struct Move *move) {
+    int choice;
+    choice = getInput("\nChoose [1-9]: ");
+    choice -= '0' + 1;
+    if (choice < 0 || choice > 8) {
+        return false;
+    }
+    move->row = 0;
+    move->col = choice;
+    while (move->col > 2) {
+        move->col -= 3;
+        ++(move->row);
+    }
+    return true;
+}
+
+void PlayerSetMove(struct Player *player, struct Move *move) {
+    player->move->row = move->row;
+    player->move->col = move->col;
 }
