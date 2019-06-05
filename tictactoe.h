@@ -52,6 +52,7 @@ void GameFindWinningMove(struct Game*, struct Player*, struct Move*);
 void GamePlayerMove(struct Game*);
 void GamePrint(struct Game*);
 void GameReset(struct Game*);
+void GameSwitchPlayer(struct Game*);
 bool PlayerMove(struct Player*, struct Move*);
 void PlayerSetMove(struct Player*, struct Move*);
 

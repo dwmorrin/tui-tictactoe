@@ -156,6 +156,11 @@ void GameReset(struct Game *game) {
     }
 }
 
+void GameSwitchPlayer(struct Game *game) {
+    game->currentPlayer = game->currentPlayer == game->p1 ?
+        game->p2 : game->p1;
+}
+
 bool PlayerMove(struct Player *player, struct Move *move) {
     int choice;
     choice = getInput("\nChoose [1-9]: ");

@@ -21,7 +21,7 @@ int main() {
         }
         GameGetMove(&game);
         GameCheckWin(&game);
-        game.currentPlayer = game.currentPlayer == game.p1 ? game.p2 : game.p1;
+        GameSwitchPlayer(&game);
     }
     GameEnd(&game, TIE);
 }
