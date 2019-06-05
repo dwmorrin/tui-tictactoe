@@ -40,7 +40,20 @@ bool GameCheckSquares(struct Game *game, struct Player *player) {
     return false;
 }
 
-void GameCompMove(struct Game *game, struct Player *comp) {
+void GameCheckWin(struct Game *game) {
+    if (GameCheckSquares(game, game->currentPlayer)) {
+        int result = game->currentPlayer->isComp ?
+            LOSE : WIN;
+        GameEnd(game, result);
+    }
+}
+
+void GameCompMove(struct Game *game) {
+    struct Player *comp = game->currentPlayer;
+    if (! comp->isComp) {
+        puts("illegal comp move");
+        exit(EXIT_FAILURE);
+    }
     struct Move move = {-1, -1};
     GameFindWinningMove(game, comp, &move);
     if (move.row < 0) {
@@ -96,6 +109,27 @@ void GameFindWinningMove(struct Game *game, struct Player *player, struct Move *
             game->board[row][col] = OPEN_TOKEN;
         }
     }
+}
+
+void GameGetMove(struct Game* game) {
+    if (game->currentPlayer->isComp) {
+        GameCompMove(game);
+    } else {
+        GamePlayerMove(game);
+    }
+}
+
+void GamePlayerMove(struct Game *game) {
+    struct Move move = {-1, -1};
+    struct Player *p = game->currentPlayer;
+    if (p->isComp) {
+        puts("illegal player move");
+        exit(EXIT_FAILURE);
+    }
+    while(! PlayerMove(p, &move) ||
+            game->board[move.row][move.col] != OPEN_TOKEN);
+    PlayerSetMove(p, &move);
+    game->board[move.row][move.col] = PLAYER_TOKEN;
 }
 
 void GamePrint(struct Game *game) {

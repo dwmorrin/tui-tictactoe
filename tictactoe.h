@@ -24,8 +24,8 @@ struct Player {
 };
 
 struct Game {
-    char currentToken, board[3][3];
-    struct Player *p1, *p2;
+    char board[3][3];
+    struct Player *p1, *p2, *currentPlayer;
 };
 
 /*
@@ -44,9 +44,12 @@ struct Game {
 
 int getInput(char*);
 bool GameCheckSquares(struct Game*, struct Player*);
-void GameCompMove(struct Game*, struct Player*);
+void GameCheckWin(struct Game*);
+void GameCompMove(struct Game*);
+void GameGetMove(struct Game*);
 void GameEnd(struct Game*, int);
 void GameFindWinningMove(struct Game*, struct Player*, struct Move*);
+void GamePlayerMove(struct Game*);
 void GamePrint(struct Game*);
 void GameReset(struct Game*);
 bool PlayerMove(struct Player*, struct Move*);
