@@ -60,14 +60,14 @@ void GameCompMove(struct Game *game) {
         GameFindWinningMove(game, game->p1, &move);
     }
     if (move.row > -1) {
-        game->board[move.row][move.col] = COMP_TOKEN;
+        game->board[move.row][move.col] = comp->token;
         PlayerSetMove(comp, &move);
         return;
     }
     for (int row = 0; row < 3; ++row) {
         for (int col = 0; col < 3; ++col) {
             if (game->board[row][col] == OPEN_TOKEN) {
-                game->board[row][col] = COMP_TOKEN;
+                game->board[row][col] = comp->token;
                 PlayerSetMove(comp, &move);
                 return;
             }
