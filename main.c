@@ -16,7 +16,7 @@ int main() {
         }
         int tryAgain = getInput("play again? ");
         if (tryAgain != 'y' && tryAgain != 'Y') {
-            break;
+            exit(EXIT_SUCCESS);
         }
         GameReset(&game);
     }
