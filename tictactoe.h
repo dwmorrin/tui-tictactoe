@@ -24,6 +24,7 @@ struct Player {
 };
 
 struct Game {
+    bool done;
     char board[3][3];
     struct Player *p1, *p2, *currentPlayer;
 };

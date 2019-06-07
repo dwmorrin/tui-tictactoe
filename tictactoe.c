@@ -88,7 +88,7 @@ void GameEnd(struct Game *game, int result) {
             puts("it's a tie!");
             break;
     }
-    exit(EXIT_SUCCESS);
+    game->done = true;
 }
 
 /**
@@ -149,6 +149,7 @@ void GamePrint(struct Game *game) {
 }
 
 void GameReset(struct Game *game) {
+    game->done = false;
     for (int row = 0; row < 3; ++row) {
         for (int col = 0; col < 3; ++col) {
             game->board[row][col] = OPEN_TOKEN;

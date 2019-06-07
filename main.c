@@ -12,15 +12,25 @@ int main() {
             {' ',' ',' '}
         },
         .p1 = &player,
-        .p2 = &comp
+        .p2 = &comp,
+        .done = false
     }; 
-    for (int moves = 0; moves < 9; ++moves) {
-        if (! game.currentPlayer->isComp) {
-            GamePrint(&game);
+    while (true) {
+        for (int moves = 0; moves < 9 && ! game.done; ++moves) {
+            if (! game.currentPlayer->isComp) {
+                GamePrint(&game);
+            }
+            GameGetMove(&game);
+            GameCheckWin(&game);
+            GameSwitchPlayer(&game);
         }
-        GameGetMove(&game);
-        GameCheckWin(&game);
-        GameSwitchPlayer(&game);
+        if (! game.done) {
+            GameEnd(&game, TIE);
+        }
+        int tryAgain = getInput("play again? ");
+        if (tryAgain != 'y' && tryAgain != 'Y') {
+            break;
+        }
+        GameReset(&game);
     }
-    GameEnd(&game, TIE);
 }
