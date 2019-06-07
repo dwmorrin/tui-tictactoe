@@ -53,6 +53,7 @@ void GameEnd(struct Game*, int);
 void GameFindOpenMove(struct Game*, struct Move*);
 void GameFindWinningMove(struct Game*, struct Player*, struct Move*);
 void GamePlayerMove(struct Game*);
+void GamePlayerSetMove(struct Game*, struct Player*, struct Move*);
 void GamePrint(struct Game*);
 void GameReset(struct Game*);
 void GameSwitchPlayer(struct Game*);

@@ -102,8 +102,7 @@ void GameCompMove(struct Game *game) {
         GameFindOpenMove(game, &move);
     }
     if (move.row > -1) {
-        game->board[move.row][move.col] = comp->token;
-        PlayerSetMove(comp, &move);
+        GamePlayerSetMove(game, comp, &move);
         return;
     }
     puts("no legal move for comp!");
@@ -185,15 +184,23 @@ void GameGetMove(struct Game *game) {
  */
 void GamePlayerMove(struct Game *game) {
     struct Move move = {-1, -1};
-    struct Player *p = game->currentPlayer;
-    if (p->isComp) {
+    struct Player *player = game->currentPlayer;
+    if (player->isComp) {
         puts("illegal player move");
         exit(EXIT_FAILURE);
     }
-    while(! PlayerMove(p, &move) ||
+    while(! PlayerMove(player, &move) ||
             game->board[move.row][move.col] != OPEN_TOKEN);
-    PlayerSetMove(p, &move);
-    game->board[move.row][move.col] = PLAYER_TOKEN;
+    GamePlayerSetMove(game, player, &move);
+}
+
+/**
+ * GamePlayerSetMove is a setter that records moves
+ * into both the player and the game board
+ */
+void GamePlayerSetMove(struct Game *game, struct Player *player, struct Move *move) {
+    PlayerSetMove(player, move);
+    game->board[move->row][move->col] = player->token;
 }
 
 /**
