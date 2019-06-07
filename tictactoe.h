@@ -50,6 +50,7 @@ void GameCheckWin(struct Game*);
 void GameCompMove(struct Game*);
 void GameGetMove(struct Game*);
 void GameEnd(struct Game*, int);
+void GameFindOpenMove(struct Game*, struct Move*);
 void GameFindWinningMove(struct Game*, struct Player*, struct Move*);
 void GamePlayerMove(struct Game*);
 void GamePrint(struct Game*);
