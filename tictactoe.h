@@ -3,9 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
-#define BOARD_SIZE 9
-#define WINS_SIZE 8
 #define OPEN_TOKEN ' '
 #define PLAYER_TOKEN 'X' 
 #define COMP_TOKEN 'O'
@@ -14,8 +13,24 @@
 
 enum {WIN, TIE, LOSE};
 
+struct Move {
+    int row, col;
+} playersMove, compsMove;
+
+struct Player {
+    bool isComp;
+    char token;
+    struct Move *move;
+} player, comp;
+
+struct Game {
+    bool done;
+    char board[3][3];
+    struct Player *p1, *p2, *currentPlayer;
+} game;
+
 /*
- * board is held in a 9 element array
+ * board is held in a 2d 3x3 array
  * mapped as follows:
  *   0 | 1 | 2
  *   --|---|--
@@ -27,36 +42,22 @@ enum {WIN, TIE, LOSE};
  * Cols: 036, 147, 258
  * Diag: 048, 246
  */
-char squares[BOARD_SIZE];
-int wins[WINS_SIZE][3] = {
-    {0,1,2}, {3,4,5}, {6,7,8},
-    {0,3,6}, {1,4,7}, {2,5,8},
-    {0,4,8}, {2,4,6}
-};
 
-/* checkSquares scans squares for winning combinations for player */
-int checkSquares(char board[], char player);
-
-void compMove(void);
-
-void end(int result);
-
-/* findWinningSquare searches board for squares the player could win with
- * If a winning square is found, the computer chooses it
- */
-int findWinningSquare(char player);
-
-int getInput(char *prompt);
-
-int hasSet(char board[], char player, int set[]);
-
-void playerMove(void);
-
-/* printBoard displays the current status in a terminal
- * TODO implement in ncurses
- */
-void printBoard(void);
-
-void resetBoard(void);
+int getInput(char*);
+void init(void);
+bool GameCheckSquares(struct Game*, struct Player*);
+void GameCheckWin(struct Game*);
+void GameCompMove(struct Game*);
+void GameGetMove(struct Game*);
+void GameEnd(struct Game*, int);
+void GameFindOpenMove(struct Game*, struct Move*);
+void GameFindWinningMove(struct Game*, struct Player*, struct Move*);
+void GamePlayerMove(struct Game*);
+void GamePlayerSetMove(struct Game*, struct Player*, struct Move*);
+void GamePrint(struct Game*);
+void GameReset(struct Game*);
+void GameSwitchPlayer(struct Game*);
+bool PlayerMove(struct Player*, struct Move*);
+void PlayerSetMove(struct Player*, struct Move*);
 
 #endif
