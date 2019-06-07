@@ -15,19 +15,19 @@ enum {WIN, TIE, LOSE};
 
 struct Move {
     int row, col;
-};
+} playersMove, compsMove;
 
 struct Player {
     bool isComp;
     char token;
     struct Move *move;
-};
+} player, comp;
 
 struct Game {
     bool done;
     char board[3][3];
     struct Player *p1, *p2, *currentPlayer;
-};
+} game;
 
 /*
  * board is held in a 2d 3x3 array
@@ -44,6 +44,7 @@ struct Game {
  */
 
 int getInput(char*);
+void init(void);
 bool GameCheckSquares(struct Game*, struct Player*);
 void GameCheckWin(struct Game*);
 void GameCompMove(struct Game*);

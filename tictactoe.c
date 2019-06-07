@@ -12,6 +12,21 @@ int getInput(char *prompt) {
     return input;
 }
 
+void init(void) {
+    playersMove.row = playersMove.col =
+    compsMove.row = compsMove.col = 0;
+    player.isComp = false;
+    player.token = PLAYER_TOKEN;
+    player.move = &playersMove;
+    comp.isComp = true;
+    comp.token = COMP_TOKEN;
+    comp.move = &compsMove;
+    game.currentPlayer = &player;
+    game.p1 = &player;
+    game.p2 = &comp;
+    GameReset(&game);
+}
+
 bool GameCheckSquares(struct Game *game, struct Player *player) {
     int row = player->move->row,
         col = player->move->col;
